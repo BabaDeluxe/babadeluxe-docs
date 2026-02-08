@@ -1,4 +1,3 @@
-# Only run if current folder name is 'babadeluxe-docs'
 $currentDirName = Split-Path (Get-Location) -Leaf
 if ($currentDirName -ne 'babadeluxe-docs') {
     Write-Host "Not in babadeluxe-docs, skipping git submodule updates." -ForegroundColor Yellow
@@ -29,7 +28,5 @@ foreach ($folder in $folders) {
         }
     } -ArgumentList $folder.FullName, $folder.Name
 }
-
-# Wait for all jobs to finish and surface output/errors
 $jobs | Wait-Job | Receive-Job
 Remove-Job $jobs

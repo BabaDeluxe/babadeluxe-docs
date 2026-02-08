@@ -2,7 +2,7 @@
 
 This project maintains a strict separation of concerns in testing to ensure fast feedback loops and reliable deployments. We use specific file naming conventions to categorize tests by their scope and infrastructure requirements.
 
-> Instead of .test.ts also .specs.ts can be used.
+> Instead of .test.ts also .spec.ts can be used.
 
 ---
 

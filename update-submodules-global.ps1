@@ -1,6 +1,8 @@
-$currentDirName = Split-Path (Get-Location) -Leaf
-if ($currentDirName -ne 'babadeluxe-docs') {
-    Write-Host "Not in babadeluxe-docs, skipping git submodule updates." -ForegroundColor Yellow
+$originalLocation = Get-Location
+
+$currentDirName = Split-Path $originalLocation -Leaf
+if ($currentDirName -notlike 'babadeluxe-*') {
+    Write-Host "Current folder '$currentDirName' is not a babadeluxe-* folder, skipping git submodule updates." -ForegroundColor Yellow
     return
 }
 
@@ -28,5 +30,7 @@ foreach ($folder in $folders) {
         }
     } -ArgumentList $folder.FullName, $folder.Name
 }
+
 $jobs | Wait-Job | Receive-Job
 Remove-Job $jobs
+Set-Location $originalLocation

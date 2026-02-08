@@ -2,16 +2,17 @@ Set-Location ..
 
 git submodule update --init --recursive --remote
 
-$folders = Get-ChildItem -Directory
+$folders = Get-ChildItem -Directory -Force
 foreach ($folder in $folders) {
-    $targetPath = Join-Path $folder.FullName "shared-docs\docs"
-    if (Test-Path $targetPath) {
+    $gitmodulesPath = Join-Path $folder.FullName ".gitmodules"
+    
+    if (Test-Path $gitmodulesPath) {
         Write-Host "Running git submodules update in $($folder.Name)..." -ForegroundColor Green
-        Push-Location $targetPath
+        Push-Location $folder.FullName
         git submodule update --init --recursive --remote
         Pop-Location
     }
     else {
-        Write-Host "Skipping $($folder.Name), because shared-docs folder wasn't found" -ForegroundColor Yellow
+        Write-Host "Skipping $($folder.Name), no .gitmodules found" -ForegroundColor Yellow
     }
 }

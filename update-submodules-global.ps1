@@ -8,8 +8,6 @@ if ($currentDirName -notlike 'babadeluxe-*') {
 
 Set-Location ..
 
-git submodule update --init --recursive --remote
-
 $folders = Get-ChildItem -Directory -Force
 $jobs = @()
 

@@ -26,6 +26,33 @@ Key files:
 
 This is the core feature of BabaDeluxe and the least documented system. It automatically ranks codebase files by relevance to the user's current message.
 
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#13111a', 'primaryColor': '#2a1758', 'primaryTextColor': '#e2d9f3', 'primaryBorderColor': '#7c3aed', 'lineColor': '#7c3aed', 'secondaryColor': '#1a0f3a', 'tertiaryColor': '#0f1a2a', 'edgeLabelBackground': '#1a1030', 'clusterBkg': '#1a1030', 'clusterBorder': '#4c1d95', 'titleColor': '#e2d9f3', 'fontFamily': 'monospace'}}}%%
+flowchart TD
+    classDef input fill:#2a1758,stroke:#7c3aed,stroke-width:2px,color:#e2d9f3
+    classDef score fill:#1a0f3a,stroke:#4c1d95,stroke-width:2px,color:#c4b5fd
+    classDef signal fill:#0f1a2a,stroke:#0891b2,stroke-width:2px,color:#67e8f9
+    classDef output fill:#0f2a1a,stroke:#059669,stroke-width:2px,color:#6ee7b7
+    classDef storage fill:#1a1a0a,stroke:#d97706,stroke-width:2px,color:#fcd34d
+
+    Prompt[User Prompt]:::input
+    Extractor[search-term-extractor.ts]:::score
+    BM25[BM25 Index]:::storage
+    GitRecency[git-recency-service.ts]:::signal
+    SessionRecency[use-recent-files.ts]:::signal
+    Composite[use-scoring-context.ts]:::score
+    Adaptive[adaptive-candidates.ts]:::score
+    WebView[Webview Context Suggestions]:::output
+
+    Prompt --> Extractor
+    Extractor --> BM25
+    BM25 -->|BM25 Relevance Score| Composite
+    GitRecency -->|Git Recency Weight| Composite
+    SessionRecency -->|Session Recency Weight| Composite
+    Composite --> Adaptive
+    Adaptive -->|Top-N Files| WebView
+```
+
 ### BM25 Index
 
 | File | Role |
@@ -61,7 +88,7 @@ For fast file listing and secondary search, the extension uses ripgrep (bundled 
 - `rg-file-lister.ts` — lists all non-ignored files in the workspace
 - `rg-context-builder.ts` — builds context snippets from rg search results
 
-### Manual Pinning (BabaContext)
+### Manual Pinning (BabaContext™)
 
 `context-pins-store.ts` manages the user's manually pinned context items. Pins can be:
 - Entire files
@@ -80,6 +107,31 @@ Two authentication strategies depending on environment:
 |-------------|----------|----------------|
 | VS Code extension | Token bridge from extension → webview | `webview-auth-controller.ts` |
 | Standalone browser | Supabase OAuth PKCE (GitHub / email) | `supabase-oauth-controller.ts` + webview Supabase client |
+
+```mermaid
+%%{init: {'theme': 'base', 'themeVariables': {'background': '#13111a', 'primaryColor': '#2a1758', 'primaryTextColor': '#e2d9f3', 'primaryBorderColor': '#7c3aed', 'lineColor': '#7c3aed', 'secondaryColor': '#1a0f3a', 'tertiaryColor': '#0f1a2a', 'edgeLabelBackground': '#1a1030', 'actorBkg': '#2a1758', 'actorBorder': '#7c3aed', 'actorTextColor': '#e2d9f3', 'actorLineColor': '#7c3aed', 'signalColor': '#c4b5fd', 'signalTextColor': '#e2d9f3', 'labelBoxBkgColor': '#1a0f3a', 'labelBoxBorderColor': '#4c1d95', 'labelTextColor': '#c4b5fd', 'loopTextColor': '#e2d9f3', 'noteBkgColor': '#1a0f3a', 'noteTextColor': '#c4b5fd', 'noteBorderColor': '#4c1d95', 'activationBkgColor': '#4c1d95', 'activationBorderColor': '#7c3aed', 'sequenceNumberColor': '#e2d9f3', 'fontFamily': 'monospace'}}}%%
+sequenceDiagram
+    autonumber
+    participant User
+    participant Ext as VS Code Extension
+    participant Webview as Vue Webview
+    participant Supabase as Supabase Auth
+
+    rect rgb(26, 15, 58)
+        note right of User: Scenario 1 — Embedded in VS Code
+        User->>Ext: Opens Extension
+        Ext->>Webview: Bridge auth session (postMessage)
+        Webview->>Supabase: Set Session (Refresh Token)
+        Supabase-->>Webview: Valid Session & Access Token
+    end
+
+    rect rgb(15, 26, 42)
+        note right of User: Scenario 2 — Standalone Browser
+        User->>Webview: Clicks Login
+        Webview->>Supabase: OAuth Flow (PKCE)
+        Supabase-->>Webview: Session & Access Token
+    end
+```
 
 The auth callback URL is parsed by `auth-callback-parser.ts`. The extension registers a URI handler (`vscode.window.registerUriHandler`) to capture the OAuth redirect.
 
@@ -138,7 +190,7 @@ git add babadeluxe-docs
 git commit -m "chore: :wrench: Updated babadeluxe-docs submodule"
 ```
 
-The `update-submodules.ps1` script at the root of this repo automates this for both parent repos if they are cloned as siblings in the same directory.
+The `manage-git-submodules.ps1` script in [babadeluxe-scripts](https://github.com/BabaDeluxe/babadeluxe-scripts) automates this for both parent repos if they are cloned as siblings.
 
 ### Known Issue
 

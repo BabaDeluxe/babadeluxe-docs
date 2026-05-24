@@ -25,22 +25,23 @@ git switch -c chore/update-deps           # Maintenance/CI/build
 
 # Work and commit
 git add .
-git commit -m "feat: :sparkles: Added Google OAuth login"
+git commit -m "feat: Added Google OAuth login"
 git push -u origin feat/my-feature-name
 ```
 
 ### Commit Message Rules
 
-- **Format**: `gitmoji type(scope): Description`
+- **Format**: `type(scope): Description`
 - **Tense**: Past tense ("Added", "Fixed", "Refactored")
-- **Capitalization**: Start with capital letter
+- **Capitalization**: Start with a capital or lowercase letter
+- **Emojis**: Not allowed in commit messages
 - **Examples**:
 
   ```bash
-  git commit -m "feat: :sparkles: Added Google OAuth login"
-  git commit -m "fix: :bug: Corrected mobile menu overlap"
-  git commit -m "refactor: :recycle: Refactored optimized database queries"
-  git commit -m "chore: :wrench: Updated React to v19"
+  git commit -m "feat: Added Google OAuth login"
+  git commit -m "fix: Corrected mobile menu overlap"
+  git commit -m "refactor: Refactored optimized database queries"
+  git commit -m "chore: Updated React to v19"
   ```
 
 ### Merging to Dev
@@ -87,17 +88,18 @@ git push origin dev
 
 ### Allowed Types
 
-| Type         | Gitmoji     | Commit? | Use For                                                   |
-| ------------ | ----------- | ------- | --------------------------------------------------------- |
-| **feat**     | :sparkles:  | Yes     | New features, initial commits, breaking changes (`feat!`) |
-| **fix**      | :bug:       | Yes     | Bug fixes                                                 |
-| **refactor** | :recycle:   | Yes     | Code cleanup, performance improvements                    |
-| **chore**    | :wrench:    | Yes     | Dependencies, build config, CI changes                    |
-| **docs**     | :memo:      | Yes     | Documentation updates                                     |
-| **test**     | :test_tube: | Yes     | Adding tests                                              |
-| **revert**   | :rewind:    | Yes     | Undoing commits                                           |
+| Type         | Commit? | Use For                                                   |
+| ------------ | ------- | --------------------------------------------------------- |
+| **feat**     | Yes     | New features, initial commits, breaking changes (`feat!`) |
+| **fix**      | Yes     | Bug fixes                                                 |
+| **refactor** | Yes     | Code cleanup, performance improvements                    |
+| **style**    | Yes     | Formatting changes only (no code changes)                 |
+| **chore**    | Yes     | Dependencies, build config, CI changes                    |
+| **docs**     | Yes     | Documentation updates                                     |
+| **test**     | Yes     | Adding tests                                              |
+| **revert**   | Yes     | Undoing commits                                           |
 
-**Forbidden**: `ci`, `build`, `perf` (use `chore` or `refactor` instead), `style` (use `refactor` instead).
+**Forbidden**: `ci`, `build`, `perf` (use `chore` or `refactor` instead).
 
 ### Feature Branch Size
 

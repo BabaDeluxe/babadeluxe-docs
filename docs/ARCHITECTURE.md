@@ -187,7 +187,7 @@ This repository (`babadeluxe-docs`) is used as a Git submodule in both `babadelu
 # In babadeluxe-vscode or babadeluxe-webview:
 git submodule update --remote babadeluxe-docs
 git add babadeluxe-docs
-git commit -m "chore: :wrench: Updated babadeluxe-docs submodule"
+git commit -m "chore: Updated babadeluxe-docs submodule"
 ```
 
 The `manage-git-submodules.ps1` script in [babadeluxe-scripts](https://github.com/BabaDeluxe/babadeluxe-scripts) automates this for both parent repos if they are cloned as siblings.
